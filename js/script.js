@@ -108,6 +108,8 @@ function seleccionarFila(filaIndex) {
 
     // Guardar el estado de selección en localStorage
     saveSelection();
+
+    console.log("Fila seleccionada:", filaIndex);
   }
 }
 
