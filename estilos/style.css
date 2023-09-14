@@ -1,0 +1,70 @@
+body {
+  font-family: Roboto, Arial, sans-serif;
+  padding: 20px;
+  background-image: url(../assets/logoHijosDelVientoConPlantas.jpg);
+  background-repeat: repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+  background-size: auto;
+}
+
+h1 {
+  font-family: "Arial", sans-serif;
+  font-size: 32px; /* Aumenta el tamaño del texto para mayor impacto */
+  color: #333;
+  text-align: center;
+  margin-top: 10px; /* Aumenta el espacio superior para separarlo más */
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Agrega un efecto de sombra al texto */
+}
+
+/* Estilos generales de la tabla */
+#tablaDatos {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tablaBody {
+  max-height: auto; /* Ajusta la altura máxima del cuerpo de la tabla según tus necesidades */
+  overflow-y: scroll;
+}
+
+#tablaDatos {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#tablaDatos th,
+#tablaDatos td {
+  border: 0.1rem solid #444;
+  padding: 10px;
+  text-align: center;
+}
+
+#tablaDatos th {
+  background-color: #222;
+  position: sticky;
+  top: 0;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Estilos para resaltar al pasar el cursor por encima de una fila */
+#tablaDatos tbody tr:hover {
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+/* Estilo para filas seleccionadas */
+tr.selected {
+  background-color: #ffcc00;
+  transition: background-color 0.3s ease;
+}
+
+/* Estilo para filas seleccionadas al hacer clic */
+tr.selected:active {
+  background-color: #ffcc00;
+}
