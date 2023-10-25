@@ -67,3 +67,20 @@ tr.selected {
 tr.selected td {
   text-decoration: line-through;
 }
+
+.red-text {
+  color: rgb(201, 18, 18);
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.caja, .fechaYHora {
+  text-decoration: none !important; 
+}
+
+#totalCaja {
+  margin-top: 1rem;
+  font-size: 2.5rem;
+  font-family: "Noto Serif Makasar", serif;
+  text-align: right;
+}

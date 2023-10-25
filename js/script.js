@@ -8,6 +8,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 var database = firebase.database();
+var totalCaja = 0;
 
 // Obtén la referencia al cuerpo de la tabla
 var tablaBody = document.getElementById("tablaBody");
@@ -16,8 +17,10 @@ var tablaBody = document.getElementById("tablaBody");
 var filas = [];
 
 // Recuperar el estado de selección de las filas desde Firebase y actualizar la tabla
+// Recuperar el estado de selección de las filas desde Firebase y actualizar la tabla
 database.ref().on("value", function (snapshot) {
   var datos = snapshot.val();
+  var totalCaja = 0; // Inicializa el total de la caja en 0
 
   // Vaciar el cuerpo de la tabla
   tablaBody.innerHTML = "";
@@ -34,6 +37,12 @@ database.ref().on("value", function (snapshot) {
 
     var fila = datos[key];
     var detallesPedido = fila.detallesPedido;
+
+    // Obtener el valor de la columna "CAJA" de la fila como un número
+    var precioFinalValue = parseFloat(fila.precioFinal) || 0;
+
+    // Sumar el valor al total de caja
+    totalCaja += precioFinalValue;
 
     var detallesHtml = "";
     if (Array.isArray(detallesPedido)) {
@@ -62,18 +71,61 @@ database.ref().on("value", function (snapshot) {
   filas.forEach(function (fila, index) {
     var selectedClass = fila.seleccionada ? "selected" : "";
 
+    // Utilizar el operador ternario para mostrar "*********" en lugar de "undefined"
+    var detallesHtml = fila.detallesHtml
+      ? fila.detallesHtml
+      : "*********";
+    var numeroMesa = fila.numeroMesa ? fila.numeroMesa : "*********";
+    var modoEntrega = fila.modoEntrega ? fila.modoEntrega : "*********";
+    var nombreUsuario = fila.nombreUsuario
+      ? fila.nombreUsuario
+      : "*********";
+    var telefono = fila.telefono ? fila.telefono : "*********";
+    var direccion = fila.direccion ? fila.direccion : "*********";
+    var comentarios = fila.comentarios ? fila.comentarios : "*********";
+    var precioFinal = fila.precioFinal ? fila.precioFinal : "*********";
+
+    // Aplicar una clase de estilo si el valor es "*********"
+    var redTextClass = "red-text";
+    if (detallesHtml === "*********") {
+      detallesHtml = `<span class="${redTextClass}">${detallesHtml}</span>`;
+    }
+    if (numeroMesa === "*********") {
+      numeroMesa = `<span class="${redTextClass}">${numeroMesa}</span>`;
+    }
+    if (modoEntrega === "*********") {
+      modoEntrega = `<span class="${redTextClass}">${modoEntrega}</span>`;
+    }
+    if (nombreUsuario === "*********") {
+      nombreUsuario = `<span class="${redTextClass}">${nombreUsuario}</span>`;
+    }
+    if (telefono === "*********") {
+      telefono = `<span class="${redTextClass}">${telefono}</span>`;
+    }
+    if (direccion === "*********") {
+      direccion = `<span class="${redTextClass}">${direccion}</span>`;
+    }
+    if (comentarios === "*********") {
+      comentarios = `<span class="${redTextClass}">${comentarios}</span>`;
+    }
+    if (precioFinal === "*********") {
+      precioFinal = `<span class="${redTextClass}">${precioFinal}</span>`;
+    }
+
     var filaHtml = `
-      <tr id="fila-${index}" class="${selectedClass}" onclick="seleccionarFila(${index})">
-        <td>${fila.fecha}</td>
-        <td>${fila.hora}</td>
-        <td>${fila.detallesHtml}</td>
-        <td>${fila.nombreUsuario}</td>
-        <td>${fila.telefono}</td>
-        <td>${fila.modoEntrega}</td>
-        <td>${fila.direccion}</td>
-        <td>${fila.comentarios}</td>
-      </tr>
-    `;
+    <tr id="fila-${index}" class="${selectedClass}" onclick="seleccionarFila(${index})">
+      <td class= "fechaYHora">${fila.fecha}</td>
+      <td>${fila.hora}</td>
+      <td>${detallesHtml}</td>
+      <td>${numeroMesa}</td>
+      <td>${modoEntrega}</td>
+      <td>${nombreUsuario}</td>
+      <td>${telefono}</td>
+      <td>${direccion}</td>
+      <td>${comentarios}</td>
+      <td class= "caja">${precioFinal}</td>
+    </tr>
+  `;
     filasHtml += filaHtml; // Agregar la fila generada a la cadena de filas
   });
 
@@ -81,23 +133,39 @@ database.ref().on("value", function (snapshot) {
 
   // Restaurar el estado de selección de las filas
   restoreSelection();
+
+  // Mostrar el total de la caja en una etiqueta div
+  var totalCajaElement = document.getElementById("totalCaja");
+  if (totalCajaElement) {
+    totalCajaElement.textContent = "Total de Ventas: $" + totalCaja.toFixed(2);
+  }
 });
 
-// Agregar el código para seleccionar/deseleccionar filas
 function seleccionarFila(filaIndex) {
   var filaElement = document.querySelector(`tr[id="fila-${filaIndex}"]`);
   if (filaElement) {
     filaElement.classList.toggle("selected");
-    var fila = filas[filaIndex];
 
     // Obtener el ID de la fila
     var filaId = `fila-${filaIndex}`;
+
+    // Excluir la última columna de ser tachada
+    var celdas = filaElement.querySelectorAll("td:not(.no-highlight)"); // Modificación aquí
+    for (var i = 0; i < celdas.length; i++) {
+      // Modificación aquí
+      celdas[i].style.textDecoration = filaElement.classList.contains(
+        "selected"
+      )
+        ? ""
+        : "none";
+    }
 
     // Actualizar el estado de selección de la fila en Firebase
     if (filaId.startsWith("fila-")) {
       // La fila es una fila adicional, no existe en la base de datos
       // Solo actualizamos el estado de selección localmente en el array de filas
-      fila.seleccionada = filaElement.classList.contains("selected");
+      filas[filaIndex].seleccionada =
+        filaElement.classList.contains("selected");
     } else {
       // La fila existe en la base de datos, actualizamos el estado en Firebase
       var filaRef = database.ref(filaId); // Utilizar el ID de la fila como referencia

@@ -7,23 +7,26 @@
     <link rel="stylesheet" type="text/css" href="./estilos/style.css" />
     <title>Hijos del Viento - Servidor</title>
   </head>
-  <body >
+  <body>
     <h1>Recepción de pedidos en tiempo real</h1>
     <table id="tablaDatos">
-      <thead >
+      <thead>
         <tr>
           <th>Fecha</th>
           <th>Hora</th>
           <th>Detalles del pedido</th>
+          <th>Para Bar / Mesa Número:</th>
+          <th>Para Llevar</th>
           <th>Cliente</th>
           <th>Teléfono</th>
-          <th>Modo de Entrega</th>
           <th>Dirección</th>
           <th>Comentarios</th>
+          <th>Valor de la Orden</th>
         </tr>
       </thead>
       <tbody id="tablaBody"></tbody>
     </table>
+    <div id="totalCaja">Total de Ventas: $0.00</div>
     <script src="./js/script.js"></script>
   </body>
 </html>
